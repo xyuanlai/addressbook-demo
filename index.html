@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Address Book</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Address Book">
+  <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+  <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#2F3BA2">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
+    integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+    integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="styles/inline.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"
+    integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+    crossorigin="anonymous"></script>
+  <script src="scripts/vue.js"></script>
+  <script src="Scripts/app.js" defer></script>
+</head>
+
+<body>
+  <div id="app">
+    <div id="myTabContent" class="tab-content">
+      <div id="home" class="tab-pane fade show active" role="tabpanel" aria-labelledby="home-tab">
+        <div id="homeNav" class="sticky-top">
+          <nav-search ref="mainSearch" :content="homeContent"></nav-search>
+        </div>
+        <div v-if="homeContent === 'history'" class="home-history m-3">
+          <div class="d-flex justify-content-between mx-1 mb-3">
+            <h5 class="mb-0">近期聯絡紀錄</h5>
+            <a v-if="historyContacts.length > 0" href="#" @click="removeHistory">清除</a>
+          </div>
+          <card-history v-for="contact in historyContacts" :key="contact.id" :contact="contact"
+            @click-home="clickHomeContact(contact)"></card-history>
+        </div>
+        <div v-if="homeContent === 'historyPreview'" class="home-history-preview m-3" @click="clickHomeHistoryPreview">
+          <div class="d-flex justify-content-between mx-1 mb-2">
+            <h5>近期聯絡紀錄</h5>
+            <a v-if="historyContacts.length > 0" href="#" @click="removeHistory">清除</a>
+          </div>
+          <card-history-preview v-for="contact in historyContacts" :key="contact.id" :contact="contact">
+          </card-history-preview>
+        </div>
+        <div v-if="homeContent === 'search'" class="home-search mx-3 my-2">
+          <!--<div class="d-flex justify-content-between mb-2">
+            <div class="form-check form-check-inline">
+              <input type="checkbox" id="searchCheckbox" class="form-check-input" @click="clickIncludeWinbond">
+              <label class="form-check-label" for="searchCheckbox">包含華邦員工</label>
+            </div>
+          </div>-->
+          <card-contact v-for="contact in results" :key="contact.EmployeeID" :contact="contact" class="search-card"
+            @click-contact="clickHomeContact(updateContactFromDB(contact))"></card-contact>
+        </div>
+        <div v-if="homeContent === 'detail'" class="home-detail m-3">
+          <contact-detail :contact="contact" :groups="groups" @update-latest="updateLatest"></contact-detail>
+        </div>
+      </div>
+      <div id="saved" class="tab-pane fade" role="tabpanel" aria-labelledby="saved-tab">
+        <nav class="navbar navbar-light bg-light sticky-top border-bottom shadow-sm" @click="scrollTop">
+          <span class="navbar-brand mb-0">常用聯絡人</span>
+        </nav>
+        <div v-if="savedContent === 'saved'" class="m-3">
+          <card-contact v-for="contact in savedContacts" :key="contact.id" :contact="contact"
+            @click-contact="clickSaveContact(contact)"></card-contact>
+        </div>
+        <div v-if="savedContent === 'detail'" class="m-3">
+          <contact-detail :contact="contact" :groups="groups" @update-latest="updateLatest"></contact-detail>
+        </div>
+      </div>
+      <div id="group" class="tab-pane fade" role="tabpanel" aria-labelledby="group-tab">
+        <nav class="navbar navbar-light bg-light sticky-top border-bottom shadow-sm" @click="scrollTop">
+          <span class="navbar-brand mb-0">我的群組</span>
+          <a v-if="groupContent === 'group' && groups.length > 0" href="#" @click.stop="editMode = !editMode">編輯</a>
+        </nav>
+        <div v-if="groupContent === 'group'" class="m-3">
+          <div v-for="group in groups" :key="group.id">
+            <div class="mb-1 px-3 py-2 d-flex">
+              <h5 class="my-auto">{{ group.name }}</h5>
+              <a v-show="editMode" href="#" class="text-danger ml-4" @click="deleteGroup(group.groupId)"><i
+                  class="fas fa-minus-circle"></i></a>
+              <a v-show="editMode" href="#" class="text-secondary ml-4" @click="editGroup(group.groupId)"><i
+                  class="far fa-edit"></i></a>
+            </div>
+            <card-contact v-for="contact in getContactsByGroup(group.groupId)" :key="contact.id" :contact="contact"
+              @click-contact="clickGroupContact(contact)"></card-contact>
+          </div>
+        </div>
+        <div v-if="groupContent === 'detail'" class="m-3">
+          <contact-detail :contact="contact" :groups="groups" @update-latest="updateLatest"></contact-detail>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-expand navbar-dark bg-dark fixed-bottom">
+      <div id="nav-tab" class="nav navbar-nav mr-auto pt-1" role="tablist">
+        <a id="home-tab" class="nav-item nav-link active" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+          aria-selected="true" @click="clickHomeMenu">
+          <div class="d-flex flex-column">
+            <i class="fas fa-home fa-lg"></i>
+            <small class="mt-1">首頁</small>
+          </div>
+        </a>
+        <a id="saved-tab" class="nav-item nav-link" data-toggle="tab" href="#saved" role="tab" aria-controls="saved"
+          aria-selected="false" @click="clickSaveMenu">
+          <div class="d-flex flex-column">
+            <i class="fas fa-star fa-lg"></i>
+            <small class="mt-1">常用</small>
+          </div>
+        </a>
+        <a id="group-tab" class="nav-item nav-link" data-toggle="tab" href="#group" role="tab" aria-controls="group"
+          aria-selected="false" @click="clickGroupMenu">
+          <div class="d-flex flex-column">
+            <i class="fas fa-users fa-lg"></i>
+            <small class="mt-1">群組</small>
+          </div>
+        </a>
+      </div>
+    </nav>
+  </div>
+</body>
+
+</html>

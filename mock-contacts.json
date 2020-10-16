@@ -1,0 +1,47 @@
+[
+    {
+        "EmployeeID": "001",
+        "LocalName": "家豪",
+        "Alias": "GH",
+        "EnglishName": "GUHAO",
+        "EMailAddress": "GUHAO@TEST.COM",
+        "ExtNo": "11111",
+        "DeptCode": "DB10"
+    },
+    {
+        "EmployeeID": "002",
+        "LocalName": "志明",
+        "Alias": "ZM",
+        "EnglishName": "ZHIMING",
+        "EMailAddress": "ZHIMING@TEST.COM",
+        "ExtNo": "22222",
+        "DeptCode": "DB20"
+    },
+    {
+        "EmployeeID": "003",
+        "LocalName": "俊傑",
+        "Alias": "JJ",
+        "EnglishName": "JUNJIE",
+        "EMailAddress": "JUNJIE@TEST.COM",
+        "ExtNo": "33333",
+        "DeptCode": "DB30"
+    },
+    {
+        "EmployeeID": "004",
+        "LocalName": "建宏",
+        "Alias": "JH1",
+        "EnglishName": "JIANHONG",
+        "EMailAddress": "JIANHONG@TEST.COM",
+        "ExtNo": "44444",
+        "DeptCode": "DB40"
+    },
+    {
+        "EmployeeID": "005",
+        "LocalName": "俊宏",
+        "Alias": "JH2",
+        "EnglishName": "JUNHONG",
+        "EMailAddress": "JUNHONG@TEST.COM",
+        "ExtNo": "55555",
+        "DeptCode": "DB50"
+    }
+]
