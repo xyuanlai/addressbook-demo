@@ -1,11 +1,11 @@
 // var cacheName = 'addressbookPWA--1';
 var filesToCache = [
-    '/',
-    '/index.html',
-    '/scripts/app.js',
-    '/scripts/vue.js',
-    '/styles/inline.css',
-    '/images/logo.png'
+    '/addressbook-demo/',
+    '/addressbook-demo/index.html',
+    '/addressbook-demo/scripts/app.js',
+    '/addressbook-demo/scripts/vue.js',
+    '/addressbook-demo/styles/inline.css',
+    '/addressbook-demo/images/logo.png'
 ];
 
 // self.addEventListener('install', function(e) {
