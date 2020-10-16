@@ -1,7 +1,7 @@
 const DB_NAME = "addressbook";
 const DB_VERSION = 1;
 // const CONTACTS_URL = './api/Contact';
-const CONTACTS_URL = '../mock-contacts.json';
+const CONTACTS_URL = '/addressbook-demo/mock-contacts.json';
 // const SAVE_URL = './api/Account/Save';
 let db;
 
