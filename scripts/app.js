@@ -732,12 +732,14 @@ var app = new Vue({
     clickSaveMenu: function () {
       this.savedContent = this.savedContentDefault;
       this.handlePushState(this.savedContent, "#save");
-      this.resetContent();
+      // this.resetContent();
+      app.getContactsSaved();
     },
     clickGroupMenu: function () {
       this.groupContent = this.groupContentDefault;
       this.handlePushState(this.groupContent, "#group");
-      this.resetContent();
+      // this.resetContent();
+      app.getGroups();
     },
     clickHomeHistoryPreview: function () {
       this.homeContent = this.homeContentDefault;
