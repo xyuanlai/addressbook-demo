@@ -740,6 +740,7 @@ var app = new Vue({
       this.handlePushState(this.groupContent, "#group");
       // this.resetContent();
       app.getGroups();
+      app.getContactsSaved();
     },
     clickHomeHistoryPreview: function () {
       this.homeContent = this.homeContentDefault;
